@@ -6,10 +6,10 @@
  */
 
  
-var roman = {
+var roman = (function(){
 
   // basic roman symbols
-  symbols: [{1:"I",5:"V",10:"X",50:"L",100:"C",500:"D",1000:"M"}],
+  var symbols = [{1:"I",5:"V",10:"X",50:"L",100:"C",500:"D",1000:"M"}];
 
   /**
      * Convert number into roman number.
@@ -17,22 +17,22 @@ var roman = {
      * @param {Integer} num - the number .
      * @returns {String} number in roman pattern.
      */
-  convertToRoman: function(num){
-    var romanNumber = this.getSymbol(num);
+  convertToRoman = function(num){
+    var romanNumber = getSymbol(num);
 
     if(romanNumber == undefined){
 
       romanNumber = "";
-      var brokenNums = this.numberBreaker(num);
+      var brokenNums = numberBreaker(num);
 
       for(var i=0;i < brokenNums.length;i++){
-        var romanDecNum = this.convertDecimalNumberToRoman(brokenNums[i]);
+        var romanDecNum = convertDecimalNumberToRoman(brokenNums[i]);
         romanNumber += romanDecNum;
       }
     }
 
     return romanNumber;
-  },
+  };
 
   /**
      * Breaks number into decimal places.
@@ -40,7 +40,7 @@ var roman = {
      * @param {Integer} num - the number .
      * @returns {Array} decimal places.
      */
-  numberBreaker: function(num){
+  numberBreaker = function(num){
 
     var str = num.toString();
     var len = str.length;
@@ -58,7 +58,7 @@ var roman = {
 
     brokenNums.reverse();
     return brokenNums;  
-  },
+  };
 
 
   /**
@@ -67,24 +67,24 @@ var roman = {
      * @param {Integer} num - the number .
      * @returns {String} number in roman pattern.
      */
-  convertDecimalNumberToRoman: function(num){
-    var symbol =  this.getSymbol(num);
+  convertDecimalNumberToRoman = function(num){
+    var symbol =  getSymbol(num);
     if(symbol !== undefined){
       return symbol;
     }else if(num < 1000) {
-      var symbolsByKey = Object.keys(this.symbols[0]);
+      var symbolsByKey = Object.keys(symbols[0]);
       for (var i= 0; i < symbolsByKey.length; i++){
         var current = symbolsByKey[i];
         var next = symbolsByKey[i+1];
 
         if(num > current && num < next){
-          return this.calculateSymbol(num,current,next);        
+          return calculateSymbol(num,current,next);        
         }
       }
     }else if(num > 1000){
-      return this.calculateSymbol(num,null,null); 
+      return calculateSymbol(num,null,null); 
     }
-  },
+  };
 
   /**
      * Calculate the roman symbol.
@@ -94,12 +94,12 @@ var roman = {
      * @param {Integer} high - he right roman basic number.
      * @returns {String} number in roman pattern.
      */
-  calculateSymbol: function(num,low,high){
-    var mult = this.getDecimalPlace(num);
+  calculateSymbol = function(num,low,high){
+    var mult = getDecimalPlace(num);
     var symbol = "";
     if(num < 1000){
      if(num == (high-mult)){
-        symbol = this.getSymbol(mult) + this.getSymbol(high);
+        symbol = getSymbol(mult) + getSymbol(high);
         return symbol;
       }else{
         var diff = (num - low);
@@ -108,14 +108,14 @@ var roman = {
 
         for(var i=1;i<=div;i++){
             total += mult;
-            symbol += this.symbols[0][mult];
+            symbol += symbols[0][mult];
         }
 
         if(num - low - total > 0){
-           symbol += this.convertDecimalNumberToRoman(num - low - total);
+           symbol += convertDecimalNumberToRoman(num - low - total);
         }
 
-        symbol = this.symbols[0][low] + symbol;
+        symbol = symbols[0][low] + symbol;
         return symbol;
       }   
     }else{
@@ -125,12 +125,12 @@ var roman = {
         numAfterThousands -= 1000;
         symbol += getSymbol(1000);
 
-        symbol += this.convertDecimalNumberToRoman(numAfterThousands);
+        symbol += convertDecimalNumberToRoman(numAfterThousands);
         return symbol;
       }
     }
 
-  },
+  };
 
 
   /**
@@ -139,9 +139,9 @@ var roman = {
      * @param {Integer} num - the number .
      * @returns {String} number in roman pattern.
      */
-  getSymbol: function(num){
-    return this.symbols[0][num];
-  },
+  getSymbol = function(num){
+    return symbols[0][num];
+  };
 
 
   /**
@@ -150,7 +150,7 @@ var roman = {
      * @param {Integer} num - the number .
      * @returns {Integer} multiple.
      */
-  getDecimalPlace: function(num){
+  getDecimalPlace = function(num){
     var mult = 10;
 
       if(num < 10){
@@ -162,5 +162,9 @@ var roman = {
       }
 
     return mult;
+  };
+  
+  return{
+    convertToRoman:convertToRoman
   }
-};
+}());
