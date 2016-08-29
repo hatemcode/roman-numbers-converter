@@ -15,23 +15,26 @@ var roman = (function(){
      * Convert number into roman number.
      *
      * @param {Integer} num - the number .
-     * @returns {String} number in roman pattern.
+     * @returns {String} number in roman pattern or null if cannot converted.
      */
   convertToRoman = function(num){
-    var romanNumber = getSymbol(num);
+    if(typeof num === "number" && !Number.isNaN(num)){
+      var romanNumber = getSymbol(num);
 
-    if(romanNumber == undefined){
+      if(romanNumber == undefined){
 
-      romanNumber = "";
-      var brokenNums = numberBreaker(num);
+        romanNumber = "";
+        var brokenNums = numberBreaker(num);
 
-      for(var i=0;i < brokenNums.length;i++){
-        var romanDecNum = convertDecimalNumberToRoman(brokenNums[i]);
-        romanNumber += romanDecNum;
+        for(var i=0;i < brokenNums.length;i++){
+          var romanDecNum = convertDecimalNumberToRoman(brokenNums[i]);
+          romanNumber += romanDecNum;
+        }
       }
-    }
 
-    return romanNumber;
+      return romanNumber;
+    }
+    return null;
   };
 
   /**
