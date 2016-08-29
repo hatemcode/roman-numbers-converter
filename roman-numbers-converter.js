@@ -8,6 +8,30 @@
 // basic roman symbols
 var symbols =[{1:"I",5:"V",10:"X",50:"L",100:"C",500:"D",1000:"M"}];
 
+
+/**
+   * Convert number into roman number.
+   *
+   * @param {Integer} num - the number .
+   * @returns {String} number in roman pattern.
+   */
+function convertToRoman(num){
+  var romanNumber = getSymbol(num);
+  
+  if(romanNumber == undefined){
+    
+    romanNumber = "";
+    var brokenNums = numberBreaker(num);
+
+    for(var i=0;i < brokenNums.length;i++){
+      var romanDecNum = convertDecimalNumberToRoman(brokenNums[i]);
+      romanNumber += romanDecNum;
+    }
+  }
+  
+  return romanNumber;
+}
+
 /**
    * Breaks number into decimal places.
    *
@@ -34,28 +58,6 @@ function numberBreaker(num){
   return brokenNums;  
 }
 
-/**
-   * Convert number into roman number.
-   *
-   * @param {Integer} num - the number .
-   * @returns {String} number in roman pattern.
-   */
-function convertToRoman(num){
-  var romanNumber = getSymbol(num);
-  
-  if(romanNumber == undefined){
-    
-    romanNumber = "";
-    var brokenNums = numberBreaker(num);
-
-    for(var i=0;i < brokenNums.length;i++){
-      var romanDecNum = convertDecimalNumberToRoman(brokenNums[i]);
-      romanNumber += romanDecNum;
-    }
-  }
-  
-  return romanNumber;
-}
 
 /**
    * Convert decimal number into roman number.
