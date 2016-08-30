@@ -4,7 +4,7 @@
  * @version 1.0
  * @licence Licensed under the Apache License, Version 2.0
  */
- 
+
 if(typeof roman == "undefined"){
   var roman = (function(){
 
@@ -37,6 +37,74 @@ if(typeof roman == "undefined"){
       return null;
     };
 
+    /**
+       * Convert roman number into regular number.
+       *
+       * @param {Integer} num - roman number .
+       * @returns {Integer} number or null if cannot converted.
+       */
+    convertToNumber = function(roman){
+      if(typeof roman === "string"){
+        var num = getNumberBySymbol(roman);
+        
+        if(num == undefined){
+          return calculateNumber(roman);
+        }else{
+          return num;
+        }
+      }
+      return null;
+    };
+
+      /**
+       * Calculate the regular number.
+       *
+       * @param {Integer} num - roman number .
+       * @returns {Integer} basic regular number.
+       */
+    calculateNumber = function(roman){
+      roman = roman.split("");
+      
+      var total = 0;
+      
+      for(var i=0;i < roman.length;i++){
+        var current = roman[i];
+        
+        if(i < roman.length - 1){
+          var next = roman[i+1];
+          var toAdd;
+
+          if(next !== current){
+            
+            if(current < next){
+              toAdd = getNumberBySymbol(next) - getNumberBySymbol(current);
+              
+              if(toAdd > 0){
+                total += toAdd;
+                i++;
+              }else{
+                total += getNumberBySymbol(current); 
+              }              
+            }else if( current > next){
+              toAdd = getNumberBySymbol(next) + getNumberBySymbol(current);
+              total += toAdd;
+
+              i++;
+            }
+            
+          }else{
+            total += getNumberBySymbol(current); 
+          }
+
+        }else{
+          total += getNumberBySymbol(current);
+        } 
+      }
+      
+      return total;
+    };
+    
+    
     /**
        * Breaks number into decimal places.
        *
@@ -145,7 +213,7 @@ if(typeof roman == "undefined"){
     getSymbol = function(num){
       return symbols[0][num];
     };
-
+    
 
     /**
        * Get decimal place multiple.
@@ -167,8 +235,25 @@ if(typeof roman == "undefined"){
       return mult;
     };
 
+        /**
+       * Get basic regular number by its roman symbol.
+       *
+       * @param {String} symbol - roman number .
+       * @returns {Integer} basic regular number.
+       */
+    getNumberBySymbol = function(symbol){
+      var symbolsByKey = Object.keys(symbols[0]);
+      for (var i= 0; i < symbolsByKey.length; i++){
+        
+        if(getSymbol(symbolsByKey[i]) === symbol){
+          return parseInt(symbolsByKey[i]);
+        }
+      }
+    };
+    
     return{
-      convertToRoman:convertToRoman
+      convertToRoman:convertToRoman,
+      convertToNumber:convertToNumber
     }
   }());
 } 
